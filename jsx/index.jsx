@@ -87,7 +87,6 @@ var TimeDisplay = React.createClass({//剩余时间显示模块
       
       document.title = "番茄工作法";
     }
-    console.log(active);
     return (
       <div className="display">
         <h2>{minute}:{second}</h2>
@@ -99,7 +98,7 @@ var TimeDisplay = React.createClass({//剩余时间显示模块
   }
 });
 var ControlPanel = React.createClass({//控制面板
-  render() {
+  render: function() {
     if(this.props.working){
       return (
         <div>
@@ -120,7 +119,7 @@ var Setting = React.createClass({//设置
   handleClick: function(e){
     $(e.target).parent().find("form").toggle();
   },
-  render() {
+  render: function() {
     return (
       <div>
         <button className="btn btn-info" onClick={this.handleClick}>设置</button>
