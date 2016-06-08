@@ -15,11 +15,17 @@ var less = require('gulp-less');
 var concat = require('gulp-concat');
 var rev = require('gulp-rev');
 var revCollector = require('gulp-rev-collector');
+var react = require('gulp-react');
 
 gulp.task('Less', function () {
   gulp.src('./less/index.less')
     .pipe(less())
     .pipe(gulp.dest('./css'));
+});
+gulp.task('jsx', function(){
+  return gulp.src('./jsx/**/*.jsx')
+    .pipe(react())
+    .pipe(gulp.dest('./src'));
 });
 gulp.task('server', function () {
   connect.server({
@@ -59,8 +65,9 @@ gulp.task('concatJS', function(){
 });
 gulp.task('default', ['server'], function () {
   gulp.watch(['less/**/*.less'], ['Less']);
+  gulp.watch(['jsx/**/*.jsx'],['jsx']);
   gulp.watch(['src/global.js','src/pullcontent.js'],['concatJS']);
-  gulp.watch(['*.html', 'css/**/*.css', 'src/pc.js', 'src/autocomplete_json.js', 'libs/**/*.js'], ['reload']);
+  gulp.watch(['*.html', 'css/**/*.css', 'src/index.js', 'src/autocomplete_json.js', 'libs/**/*.js'], ['reload']);
 });
 gulp.task('clean',function(){
   return del(["./build/**/*"]);
