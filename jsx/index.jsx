@@ -5,7 +5,7 @@ var App = React.createClass({
       restTime: 10*60,
       time: 45*60,
       timer: null
-    };
+    }; 
   },
   handleStartWork: function(){
     if(this.state.timer){
