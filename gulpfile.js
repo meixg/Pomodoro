@@ -17,7 +17,7 @@ var rev = require('gulp-rev');
 var revCollector = require('gulp-rev-collector');
 
 gulp.task('Less', function () {
-  gulp.src('./less/pc.less')
+  gulp.src('./less/index.less')
     .pipe(less())
     .pipe(gulp.dest('./css'));
 });
@@ -49,7 +49,7 @@ gulp.task('server', function () {
   });
 });
 gulp.task('reload', function () {
-  gulp.src(['./pc.html'])
+  gulp.src(['./index.html'])
     .pipe(connect.reload());
 });
 gulp.task('concatJS', function(){
