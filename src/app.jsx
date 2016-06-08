@@ -2,7 +2,7 @@ var App = React.createClass({
   getInitialState: function () {
     return {
       workTime: 45*60,
-      restTime: 10,
+      restTime: 10*60,
       time: 45*60,
       timer: null
     };
@@ -60,20 +60,39 @@ var App = React.createClass({
     }
     return (
       <div>
-        <TimeDisplay time={this.state.time} percent={this.state.time/this.state.workTime*100}></TimeDisplay>
+        <h1>番茄工作法</h1>
+        <TimeDisplay time={this.state.time} working={working} percent={this.state.time/this.state.workTime*100}></TimeDisplay>
         <ControlPanel handleStartWork={this.handleStartWork} handleStartRest={this.handleStartRest} handleStop={this.handleStop} working={working}></ControlPanel>
-        <Setting ref="setting"></Setting>
+        <Setting ref="setting" workTime={this.state.workTime} restTime={this.state.restTime}></Setting>
       </div>
     );
   }
 });
 var TimeDisplay = React.createClass({//剩余时间显示模块
   render: function(){
+    var time = this.props.time;
+    var minute = parseInt(time/60);
+    if(minute < 10){
+      minute = "0" + minute;
+    }
+    var second = parseInt(time%60);
+    if(second < 10){
+      second = "0" + second;
+    }
+    var active = "";
+    if(this.props.working){
+      active = "active";
+      document.title = minute+":"+second+"---番茄工作法";
+    }else{
+      
+      document.title = "番茄工作法";
+    }
+    console.log(active);
     return (
       <div className="display">
-        <div>{this.props.time}</div>
+        <h2>{minute}:{second}</h2>
         <div className="progress">
-          <div className="progress-bar" style={{width : this.props.percent+"%"}}></div>
+          <div className={"progress-bar progress-bar-striped " + active} style={{width : this.props.percent+"%"}}></div>
         </div>
       </div>
     );
@@ -84,14 +103,14 @@ var ControlPanel = React.createClass({//控制面板
     if(this.props.working){
       return (
         <div>
-          <button onClick={this.props.handleStop}>停止</button>
+          <button className="btn btn-danger" onClick={this.props.handleStop}>停止</button>
         </div>
         );
     }else{
       return (
         <div>
-          <button onClick={this.props.handleStartWork}>开始工作</button>
-          <button onClick={this.props.handleStartRest}>开始休息</button>
+          <button className="btn btn-success" onClick={this.props.handleStartWork}>开始工作</button>
+          <button className="btn btn-success" onClick={this.props.handleStartRest}>开始休息</button>
         </div>
       )
     }
@@ -99,16 +118,28 @@ var ControlPanel = React.createClass({//控制面板
 });
 var Setting = React.createClass({//设置
   handleClick: function(e){
-    $(e.target).parent().find(".items").toggle();
+    $(e.target).parent().find("form").toggle();
   },
   render() {
     return (
       <div>
-        <button onClick={this.handleClick}>设置</button>
-        <div className="items"  style={{display:"none"}}>
-          <label htmlFor="workTime">工作时长:</label><input id="workTime" type="text" className="workTime"/>
-          <label htmlFor="restTime">休息时长:</label><input type="text" id="restTime" className="restTime"/>
-        </div>
+        <button className="btn btn-info" onClick={this.handleClick}>设置</button>
+        <form className="form-inline" style={{display:"none"}}>
+            <div className="form-group">
+              <label htmlFor="workTime">工作时长:</label>
+              <div className="input-group">
+                <input id="workTime" type="text" className="workTime form-control" defaultValue={this.props.workTime/60}/>
+                <div className="input-group-addon">分钟</div>
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="restTime">休息时长:</label>
+              <div className="input-group">
+                <input type="text" id="restTime" className="restTime form-control" defaultValue={this.props.restTime/60}/>
+                <div className="input-group-addon">分钟</div>
+              </div>
+            </div>
+        </form>
       </div>
     );
   }
